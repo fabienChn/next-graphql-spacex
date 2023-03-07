@@ -22,7 +22,7 @@ export default function Pagination({ currentPage, onPageChange, isLastPage = fal
   }
 
   return (
-    <div className="flex gap-2 m-2">
+    <div className="flex items-center gap-2 m-2">
       {currentPage > 1 && (
         <button onClick={handlePrevious} className="btn">{`<<`}</button>
       )}

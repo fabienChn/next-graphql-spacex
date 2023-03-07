@@ -1,17 +1,26 @@
-import { ReactNode, useContext, useMemo } from 'react'
+import { ReactNode, useContext, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router';
 import Head from 'next/head'
-import { GlobalStateContext } from '@/context';
+import { auth } from '@/firebase/clientApp';
+import { GlobalStateContext } from '@/contexts/global-state-context';
+import useAccess from '@/hooks/useAccess';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps): JSX.Element {
-  const { name } = useContext(GlobalStateContext);
+  useAccess();
   const router = useRouter();
+  const { authenticatedUser, isLoadingAuth } = useContext(GlobalStateContext);
 
-  const isHome = useMemo(() => router.pathname === '/', [router.pathname]);
+  const showGoBackButton = useMemo(() => {
+    return !['/', '/login'].includes(router.pathname);
+  }, [router.pathname]);
+
+  const handleLogoutClick = () => {
+    auth.signOut();
+  };
 
   return (
     <>
@@ -22,22 +31,33 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <div className="flex gap-5">
-          {!isHome && (
-            <div onClick={() => router.back()} className="cursor-pointer">
-              {`<`} Go Back
-            </div>
-          )}
-          <span className="ml-2">
-            The SpaceX app - {name}
-          </span>
-        </div>
+      {!isLoadingAuth && (    
+        <main>
+          <div className="flex gap-5 bg-slate-100 p-5 items-center justify-between">
+            {showGoBackButton && (
+              <div onClick={() => router.back()} className="cursor-pointer">
+                {`<`} Go Back
+              </div>
+            )}
+            <span className="ml-2">
+              The SpaceX app
+            </span>
 
-        <div className="m-5">
-          {children}
-        </div>
-      </main>
+            {authenticatedUser && (
+              <div className="flex gap-5 items-center">
+                {authenticatedUser?.displayName}
+                <button className="btn" onClick={handleLogoutClick}>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="m-5">
+            {children}
+          </div>
+        </main>
+      )}
     </>
   );
 }

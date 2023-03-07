@@ -30,7 +30,7 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
 export default function LaunchDetail({ launch }: LaunchDetailProps): JSX.Element {
   return (
     <div>
-      <h1 className="text-xl mb-4">
+      <h1 className="title">
         Details of launch {launch?.id}
       </h1>
 
