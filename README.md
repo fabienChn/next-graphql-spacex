@@ -1,5 +1,11 @@
 ## Getting Started
 
+Install modules:
+
+```
+yarn install
+```
+
 Run the development server:
 
 ```bash
