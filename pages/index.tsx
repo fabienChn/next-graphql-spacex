@@ -76,45 +76,37 @@ export default function Home({ initialLaunches }: HomeProps): JSX.Element {
     setLaunches(data.launches);
   };
 
-  const filteredLaunches = useMemo((): ShortLaunch[] => {
-    return launches.filter(launch => (
-      launch.mission_name?.includes(search) || launch.launch_date_local?.includes(search)
-    ));
-  }, [launches, search]);
-
   return (
-    <>
-        <div>
-          <h1 className="title">
-            Launches:
-          </h1>
-          
-          <div className="my-2">
-            <input 
-              className="input border-orange-100"
-              value={search} 
-              placeholder="Search by name or date" 
-              onChange={handleSearchChange} 
-              onKeyDown={handleInputKeyDown}
-            />
-          </div>
+    <div>
+      <h1 className="title">
+        Launches:
+      </h1>
+      
+      <div className="my-2">
+        <input 
+          className="input border-orange-100"
+          value={search} 
+          placeholder="Search by name or date" 
+          onChange={handleSearchChange} 
+          onKeyDown={handleInputKeyDown}
+        />
+      </div>
 
-          <div className="flex flex-col gap-3">
-            {filteredLaunches?.map((launch) => (
-              <div key={launch.id} className="p-1">
-                <Link href={`/launches/${launch.id}`}>
-                  {dayjs(launch.launch_date_local).format('YYYY-MM-DD HH:mm')}: <strong>{launch.mission_name}</strong>
-                </Link>
-              </div>
-            ))}
+      <div className="flex flex-col gap-3">
+        {launches?.map((launch) => (
+          <div key={launch.id} className="p-1">
+            <Link href={`/launches/${launch.id}`}>
+              {dayjs(launch.launch_date_local).format('YYYY-MM-DD HH:mm')}: <strong>{launch.mission_name}</strong>
+            </Link>
           </div>
+        ))}
+      </div>
 
-          <Pagination 
-            currentPage={page} 
-            isLastPage={isLastPage} 
-            onPageChange={handlePageChange}
-          />
-        </div>
-    </>
-  )
+      <Pagination 
+        currentPage={page} 
+        isLastPage={isLastPage} 
+        onPageChange={handlePageChange}
+      />
+    </div>
+  );
 }

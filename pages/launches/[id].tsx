@@ -41,5 +41,5 @@ export default function LaunchDetail({ launch }: LaunchDetailProps): JSX.Element
         <span>Success: {launch?.launch_success}</span>
       </div>
     </div>
-  )
+  );
 }
